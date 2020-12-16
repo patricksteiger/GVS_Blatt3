@@ -9,9 +9,10 @@ public class Utils {
     public static final int MAX_RESULT_LENGTH = 64;
 
     public static String getResultPrefix(String prefix) {
+        final int addedPrefixLength = MAX_RESULT_LENGTH - prefix.length() + 1;
         while (true) {
             Random rnd = new Random();
-            int l = rnd.nextInt(MAX_RESULT_LENGTH);
+            int l = rnd.nextInt(addedPrefixLength);
             String resultPrefix = prefix + getRandomHexadecimalString(l);
             String hash = DigestUtils.sha256Hex(resultPrefix);
             if (hash.startsWith(prefix))
