@@ -21,7 +21,7 @@ public class Requester implements Runnable {
     public void run() {
         System.out.println("Thread started! Prefix: " + this.prefix + ".");
         String result = Utils.getResultPrefix(this.prefix);
-        this.socket.connect(Main.REPLY_ADDRESS);
+        this.socket.connect(Utils.REPLY_ADDRESS);
         this.socket.send(result.getBytes(ZMQ.CHARSET));
         byte[] reply = this.socket.recv();
         String rank = new String(reply, ZMQ.CHARSET);

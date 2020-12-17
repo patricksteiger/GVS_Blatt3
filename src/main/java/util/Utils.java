@@ -5,8 +5,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.util.Random;
 
 public class Utils {
-    public static final String hexadecimalChars = "0123456789abcdef";
-    public static final int MAX_RESULT_LENGTH = 64;
+    public static final String PUBLISHER_ADDRESS = "tcp://gvs.lxd-vs.uni-ulm.de:27341";
+    public static final String REPLY_ADDRESS = "tcp://gvs.lxd-vs.uni-ulm.de:27349";
+    private static final String hexadecimalChars = "0123456789abcdef";
+    private static final int MAX_RESULT_LENGTH = 64;
 
     public static String getResultPrefix(String prefix) {
         final int addedPrefixLength = MAX_RESULT_LENGTH - prefix.length() + 1;
