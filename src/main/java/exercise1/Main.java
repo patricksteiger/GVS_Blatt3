@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-    // Decides how many Subscribers are started
+    // Decides how many Subscribers are started.
     public static final int SUBSCRIBER_THREAD_COUNT = 3;
     // Decides how many concurrent Requester-Threads can be started for each Subscriber.
     public static final int REQUESTER_THREAD_COUNT = 3;
@@ -12,8 +12,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Exercise 1 started...");
         ExecutorService executorService = Executors.newFixedThreadPool(SUBSCRIBER_THREAD_COUNT);
-        for (int i = 0; i < SUBSCRIBER_THREAD_COUNT; i++) {
+        for (int i = 0; i < SUBSCRIBER_THREAD_COUNT; i++)
             executorService.execute(new Subscriber());
-        }
     }
 }

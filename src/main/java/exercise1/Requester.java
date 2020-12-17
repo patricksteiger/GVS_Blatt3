@@ -20,12 +20,15 @@ public class Requester implements Runnable {
     @Override
     public void run() {
         System.out.println("Thread started! Prefix: " + this.prefix + ".");
+        // Calculate result
         String result = Utils.getResultPrefix(this.prefix);
-        this.socket.connect(Utils.REPLY_ADDRESS);
+        // Connect socket, send result and await answer
+        this.socket.connect(Utils.REPLIER_ADDRESS);
         this.socket.send(result.getBytes(ZMQ.CHARSET));
         byte[] reply = this.socket.recv();
-        String rank = new String(reply, ZMQ.CHARSET);
-        System.out.println("Prefix: " + this.prefix + ", Result: " + result + ", Answer: " + rank + ".");
+        String answer = new String(reply, ZMQ.CHARSET);
+        // Print answer
+        System.out.println("Prefix: " + this.prefix + ", Result: " + result + ", Answer: " + answer + ".");
         this.socket.close();
     }
 }
