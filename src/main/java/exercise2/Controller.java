@@ -17,10 +17,6 @@ public class Controller {
             ZMQ.Socket pushSocket = context.createSocket(SocketType.PUSH);
             pushSocket.setIPv6(true);
             pushSocket.bind(CONTROLLER_ADDRESS);
-            // Connect to sink
-            ZMQ.Socket pullSocket = context.createSocket(SocketType.PULL);
-            pullSocket.setIPv6(true);
-            pullSocket.connect(SINK_ADDRESS);
             // Subscribe to Publisher-socket
             ZMQ.Socket subscriberSocket = context.createSocket(SocketType.SUB);
             subscriberSocket.setIPv6(true);
@@ -34,8 +30,7 @@ public class Controller {
                     oldPrefix = prefix;
                     System.out.println("Controller sends prefix: " + prefix);
                     pushSocket.send(prefix.getBytes(ZMQ.CHARSET));
-                    byte[] pullReply = pullSocket.recv();
-                    new Thread(new Submitter(context, pullReply, prefix)).start();
+                    new Thread(new Submitter(context, prefix)).start();
                 }
             }
         }

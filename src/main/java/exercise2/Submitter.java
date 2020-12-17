@@ -5,15 +5,15 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import util.Utils;
 
+import static exercise2.Controller.SINK_ADDRESS;
+
 public class Submitter implements Runnable {
 
-    private final byte[] result;
     private final ZContext context;
     private final ZMQ.Socket socket;
     private final String prefix;
 
-    public Submitter(ZContext context, byte[] result, String prefix) {
-        this.result = result;
+    public Submitter(ZContext context, String prefix) {
         this.prefix = prefix;
         this.context = context;
         this.socket = context.createSocket(SocketType.REQ);
@@ -23,8 +23,13 @@ public class Submitter implements Runnable {
     @Override
     public void run() {
         System.out.println("Submitter started...");
+        // Connect to sink
+        ZMQ.Socket pullSocket = context.createSocket(SocketType.PULL);
+        pullSocket.setIPv6(true);
+        pullSocket.connect(SINK_ADDRESS);
+        byte[] result = pullSocket.recv();
         this.socket.connect(Utils.REPLIER_ADDRESS);
-        this.socket.send(this.result);
+        this.socket.send(result);
         byte[] reply = this.socket.recv();
         String answer = new String(reply, ZMQ.CHARSET);
         System.out.println("Prefix: " + this.prefix + ", Result: " + new String(result, ZMQ.CHARSET) + ", Answer: " + answer + ".");
