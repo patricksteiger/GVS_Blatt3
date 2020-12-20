@@ -18,11 +18,15 @@ public class Submitter implements Runnable {
     @Override
     public void run() {
         try (ZContext context = new ZContext()) {
+            // Connect to Response-Socket
             ZMQ.Socket socket = context.createSocket(SocketType.REQ);
             socket.connect(Utils.REPLIER_ADDRESS);
+            // Send result
             socket.send(result.getBytes(ZMQ.CHARSET));
+            // Get reply
             byte[] reply = socket.recv();
             String answer = new String(reply, ZMQ.CHARSET);
+            // Print answer
             System.out.println("Prefix: " + this.prefix + ", Result: " + result + ", Answer: " + answer + ".");
             socket.close();
         }
