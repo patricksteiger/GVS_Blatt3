@@ -5,34 +5,26 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import util.Utils;
 
-import static exercise2.Controller.SINK_ADDRESS;
-
 public class Submitter implements Runnable {
 
-    private final ZContext context;
-    private final ZMQ.Socket socket;
     private final String prefix;
+    private final String result;
 
-    public Submitter(ZContext context, String prefix) {
+    public Submitter(String prefix, String result) {
         this.prefix = prefix;
-        this.context = context;
-        this.socket = context.createSocket(SocketType.REQ);
-        this.socket.setIPv6(true);
+        this.result = result;
     }
 
     @Override
     public void run() {
-        System.out.println("Submitter started...");
-        // Connect to sink
-        ZMQ.Socket pullSocket = context.createSocket(SocketType.PULL);
-        pullSocket.setIPv6(true);
-        pullSocket.connect(SINK_ADDRESS);
-        byte[] result = pullSocket.recv();
-        this.socket.connect(Utils.REPLIER_ADDRESS);
-        this.socket.send(result);
-        byte[] reply = this.socket.recv();
-        String answer = new String(reply, ZMQ.CHARSET);
-        System.out.println("Prefix: " + this.prefix + ", Result: " + new String(result, ZMQ.CHARSET) + ", Answer: " + answer + ".");
-        this.socket.close();
+        try (ZContext context = new ZContext()) {
+            ZMQ.Socket socket = context.createSocket(SocketType.REQ);
+            socket.connect(Utils.REPLIER_ADDRESS);
+            socket.send(result.getBytes(ZMQ.CHARSET));
+            byte[] reply = socket.recv();
+            String answer = new String(reply, ZMQ.CHARSET);
+            System.out.println("Prefix: " + this.prefix + ", Result: " + result + ", Answer: " + answer + ".");
+            socket.close();
+        }
     }
 }

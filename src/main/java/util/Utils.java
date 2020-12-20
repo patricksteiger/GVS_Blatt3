@@ -37,6 +37,11 @@ public class Utils {
         return sb.toString();
     }
 
+    public static String getRandomHexadecimalString(String prefix) {
+        final int addedPrefixLength = MAX_RESULT_LENGTH - prefix.length() + 1;
+        return prefix + getRandomHexadecimalString(addedPrefixLength);
+    }
+
     public static char getRandomHexadecimalChar() {
         Random random = new Random();
         int index = random.nextInt(hexadecimalChars.length());
